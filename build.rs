@@ -4,7 +4,7 @@ use cmake;
 fn main() {
   let dst = cmake::Config::new("clip").build_target("clip").build();
 
-  #[cfg(target_os = "linux")]
+  #[cfg(not(target_os = "windows"))]
   {
     println!("cargo:rustc-link-search=native={}/build", dst.display());
   }
@@ -20,15 +20,14 @@ fn main() {
   println!("cargo:rustc-link-lib=static=clip");
 
   cc::Build::new()
+    .cpp(true)
+    .flag("-std=c++11")
     .include("clip")
     .file("clip_c_interface.cpp")
     .compile("clip_c_interface");
 
-  // these have to come after cc::Build for some reason
   #[cfg(target_os = "linux")]
   {
-    // linux, undefined reference to operator new
-    println!("cargo:rustc-link-lib=stdc++");
     println!("cargo:rustc-link-lib=xcb");
     println!("cargo:rustc-link-lib=png");
   }
@@ -36,5 +35,10 @@ fn main() {
   #[cfg(target_os = "windows")]
   {
     println!("cargo:rustc-link-lib=User32");
+  }
+
+  #[cfg(target_os = "macos")]
+  {
+    println!("cargo:rustc-link-lib=framework=AppKit");
   }
 }

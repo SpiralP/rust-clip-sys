@@ -2,6 +2,7 @@ use std::os::raw::{c_char, c_ulong, c_void};
 
 pub type ClipFormat = u8;
 
+/// must call `clip_delete_image()`
 pub type ClipImage = *const c_void;
 pub type ClipImageData = *const c_char;
 
@@ -34,7 +35,12 @@ extern "C" {
   pub fn clip_get_text() -> *const c_char;
   pub fn clip_delete_text(text: *const c_char);
 
+  pub fn clip_set_image(img: ClipImage) -> bool;
   pub fn clip_get_image() -> ClipImage;
+
+  pub fn clip_create_image_from_data_spec(data: ClipImageData, spec: ClipImageSpec) -> ClipImage;
+  pub fn clip_create_image_from_spec(spec: ClipImageSpec) -> ClipImage;
+
   pub fn clip_delete_image(img: ClipImage);
 
   pub fn clip_get_image_spec(img: ClipImage) -> ClipImageSpec;

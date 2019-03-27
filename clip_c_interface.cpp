@@ -45,12 +45,33 @@ extern "C" void clip_delete_text(const char* text) {
 }
 
 // image
+extern "C" bool clip_set_image(void* ptr) {
+  clip::image* img = static_cast<clip::image*>(ptr);
+  return clip::set_image(*img);
+}
+
 extern "C" void* clip_get_image() {
   clip::image* img = new clip::image;
   if (!clip::get_image(*img))
     return nullptr;
 
   return img;
+}
+
+extern "C" void* clip_create_image_from_data_spec(const void* data,
+                                                  clip::image_spec spec) {
+  clip::image* img = new clip::image(data, spec);
+  return img;
+}
+
+extern "C" void* clip_create_image_from_spec(clip::image_spec spec) {
+  clip::image* img = new clip::image(spec);
+  return img;
+}
+
+extern "C" void clip_delete_image(void* ptr) {
+  clip::image* img = static_cast<clip::image*>(ptr);
+  delete img;
 }
 
 extern "C" clip::image_spec clip_get_image_spec(void* ptr) {
@@ -62,9 +83,3 @@ extern "C" char* clip_get_image_data(void* ptr) {
   clip::image* img = static_cast<clip::image*>(ptr);
   return img->data();
 }
-
-extern "C" void clip_delete_image(void* ptr) {
-  clip::image* img = static_cast<clip::image*>(ptr);
-  delete img;
-}
-// const char* data = img.data();

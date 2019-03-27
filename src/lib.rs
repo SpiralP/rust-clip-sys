@@ -1,14 +1,14 @@
 use std::os::raw::{c_char, c_ulong, c_void};
 
-pub type ClipFormat = u8;
+pub type CClipFormat = u8;
 
 /// must call `clip_delete_image()`
-pub type ClipImage = *const c_void;
-pub type ClipImageData = *const c_char;
+pub type CClipImage = *const c_void;
+pub type CClipImageData = *const c_char;
 
 #[derive(Debug)]
 #[repr(C)]
-pub struct ClipImageSpec {
+pub struct CClipImageSpec {
   pub width: c_ulong,
   pub height: c_ulong,
   pub bits_per_pixel: c_ulong,
@@ -25,26 +25,27 @@ pub struct ClipImageSpec {
 
 #[link(name = "clip_c_interface")]
 extern "C" {
-  pub fn clip_empty_format() -> ClipFormat;
-  pub fn clip_text_format() -> ClipFormat;
-  pub fn clip_image_format() -> ClipFormat;
+  pub fn clip_empty_format() -> CClipFormat;
+  pub fn clip_text_format() -> CClipFormat;
+  pub fn clip_image_format() -> CClipFormat;
 
-  pub fn clip_has(format: ClipFormat) -> bool;
+  pub fn clip_has(format: CClipFormat) -> bool;
 
   pub fn clip_set_text(text: *const c_char) -> bool;
   pub fn clip_get_text() -> *const c_char;
   pub fn clip_delete_text(text: *const c_char);
 
-  pub fn clip_set_image(img: ClipImage) -> bool;
-  pub fn clip_get_image() -> ClipImage;
+  pub fn clip_set_image(img: CClipImage) -> bool;
+  pub fn clip_get_image() -> CClipImage;
 
-  pub fn clip_create_image_from_data_spec(data: ClipImageData, spec: ClipImageSpec) -> ClipImage;
-  pub fn clip_create_image_from_spec(spec: ClipImageSpec) -> ClipImage;
+  pub fn clip_create_image_from_data_spec(data: CClipImageData, spec: CClipImageSpec)
+    -> CClipImage;
+  pub fn clip_create_image_from_spec(spec: CClipImageSpec) -> CClipImage;
 
-  pub fn clip_delete_image(img: ClipImage);
+  pub fn clip_delete_image(img: CClipImage);
 
-  pub fn clip_get_image_spec(img: ClipImage) -> ClipImageSpec;
-  pub fn clip_get_image_data(img: ClipImage) -> ClipImageData;
+  pub fn clip_get_image_spec(img: CClipImage) -> CClipImageSpec;
+  pub fn clip_get_image_data(img: CClipImage) -> CClipImageData;
 }
 
 #[test]

@@ -52,8 +52,10 @@ extern "C" bool clip_set_image(void* ptr) {
 
 extern "C" void* clip_get_image() {
   clip::image* img = new clip::image;
-  if (!clip::get_image(*img))
+  if (!clip::get_image(*img)) {
+    delete img;
     return nullptr;
+  }
 
   return img;
 }

@@ -30,6 +30,10 @@ extern "C" {
 
   pub fn clip_has(format: ClipFormat) -> bool;
 
+  pub fn clip_set_text(text: *const c_char) -> bool;
+  pub fn clip_get_text() -> *const c_char;
+  pub fn clip_delete_text(text: *const c_char);
+
   pub fn clip_get_image() -> ClipImage;
   pub fn clip_delete_image(img: ClipImage);
 
@@ -47,24 +51,51 @@ fn test_linking() {
 }
 
 #[test]
-fn test_has_empty() {
+fn test_has() {
   unsafe {
-    assert!(clip_has(clip_empty_format()));
+    assert!(
+      clip_has(clip_empty_format())
+        || clip_has(clip_text_format())
+        || clip_has(clip_image_format())
+    );
   }
 }
 
 #[test]
-fn test_has_text() {
-  unsafe {
-    assert!(clip_has(clip_text_format()));
-  }
-}
+fn test_text() {
+  let in_string = "bap".to_string();
 
-#[test]
-fn test_has_image() {
-  unsafe {
-    assert!(clip_has(clip_image_format()));
+  // copy
+  {
+    use std::ffi::CString;
+
+    unsafe {
+      let c_string = CString::new(in_string.clone()).unwrap();
+      let raw = c_string.into_raw();
+
+      assert!(clip_set_text(raw));
+
+      CString::from_raw(raw);
+    }
   }
+
+  // paste
+  let out_string = {
+    use std::ffi::CStr;
+
+    unsafe {
+      let c_str = clip_get_text();
+      assert!(!c_str.is_null());
+
+      let out_string = CStr::from_ptr(c_str).to_str().unwrap().to_string();
+
+      clip_delete_text(c_str);
+
+      out_string
+    }
+  };
+
+  assert_eq!(out_string, in_string);
 }
 
 #[test]

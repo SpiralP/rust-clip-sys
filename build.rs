@@ -11,20 +11,36 @@ fn main() {
 
   #[cfg(target_os = "windows")]
   {
-    println!(
-      "cargo:rustc-link-search=native={}/build/Debug",
-      dst.display()
-    );
+    #[cfg(debug_assertions)]
+    {
+      println!(
+        "cargo:rustc-link-search=native={}/build/Debug",
+        dst.display()
+      );
+    }
+
+    #[cfg(not(debug_assertions))]
+    {
+      println!(
+        "cargo:rustc-link-search=native={}/build/Release",
+        dst.display()
+      );
+    }
   }
 
   println!("cargo:rustc-link-lib=static=clip");
 
-  cc::Build::new()
-    .cpp(true)
-    .flag("-std=c++11")
-    .include("clip")
-    .file("clip_c_interface.cpp")
-    .compile("clip_c_interface");
+  let mut config = cc::Build::new();
+  config.cpp(true);
+
+  #[cfg(not(target_os = "windows"))]
+  {
+    config.flag("-std=c++11");
+  }
+
+  config.include("clip");
+  config.file("clip_c_interface.cpp");
+  config.compile("clip_c_interface");
 
   #[cfg(target_os = "linux")]
   {

@@ -39,7 +39,7 @@ fn main() {
   }
 
   config.include("clip");
-  config.file("clip_c_interface.cpp");
+  config.file("src/clip_c_interface.cpp");
   config.compile("clip_c_interface");
 
   #[cfg(target_os = "linux")]

@@ -1,52 +1,6 @@
-use std::os::raw::{c_char, c_ulong, c_void};
+#![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
 
-pub type CClipFormat = u8;
-
-/// must call `clip_delete_image()`
-pub type CClipImage = *const c_void;
-pub type CClipImageData = *const c_char;
-
-#[derive(Debug)]
-#[repr(C)]
-pub struct CClipImageSpec {
-  pub width: c_ulong,
-  pub height: c_ulong,
-  pub bits_per_pixel: c_ulong,
-  pub bytes_per_row: c_ulong,
-  pub red_mask: c_ulong,
-  pub green_mask: c_ulong,
-  pub blue_mask: c_ulong,
-  pub alpha_mask: c_ulong,
-  pub red_shift: c_ulong,
-  pub green_shift: c_ulong,
-  pub blue_shift: c_ulong,
-  pub alpha_shift: c_ulong,
-}
-
-#[link(name = "clip_c_interface")]
-extern "C" {
-  pub fn clip_empty_format() -> CClipFormat;
-  pub fn clip_text_format() -> CClipFormat;
-  pub fn clip_image_format() -> CClipFormat;
-
-  pub fn clip_has(format: CClipFormat) -> bool;
-
-  pub fn clip_set_text(text: *const c_char) -> bool;
-  pub fn clip_get_text() -> *const c_char;
-  pub fn clip_delete_text(text: *const c_char);
-
-  pub fn clip_set_image(img: CClipImage) -> bool;
-  pub fn clip_get_image() -> CClipImage;
-
-  pub fn clip_create_image_from_data_spec(data: CClipImageData, spec: CClipImageSpec)
-    -> CClipImage;
-  pub fn clip_create_image_from_spec(spec: CClipImageSpec) -> CClipImage;
-
-  pub fn clip_delete_image(img: CClipImage);
-
-  pub fn clip_get_image_spec(img: CClipImage) -> CClipImageSpec;
-  pub fn clip_get_image_data(img: CClipImage) -> CClipImageData;
-}
+include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
 #[test]
 fn test_linking() {

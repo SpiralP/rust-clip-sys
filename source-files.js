@@ -1,3 +1,3 @@
 var N = null;var sourcesIndex = {};
-sourcesIndex["clip_sys"] = {"name":"","dirs":[],"files":["lib.rs"]};
+sourcesIndex["clip_sys"] = {"name":"","files":["bindings.rs","lib.rs"]};
 createSourceSidebar();

@@ -62,7 +62,10 @@ fn test_text() {
 #[test]
 fn test_get_image() {
   unsafe {
-    assert!(clip_has(clip_image_format()));
+    if !clip_has(clip_image_format()) {
+      eprintln!("skipping image test, no image in clipboard");
+      return;
+    }
 
     let img = clip_get_image();
     assert!(!img.is_null());

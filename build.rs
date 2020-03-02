@@ -34,7 +34,7 @@ fn main() {
   let mut config = cc::Build::new();
   config.cpp(true);
 
-  #[cfg(not(target_os = "windows"))]
+  #[cfg(target_os = "macos")]
   {
     config.flag("-std=c++14");
   }
@@ -63,6 +63,7 @@ fn main() {
   // to bindgen, and lets you build up options for
   // the resulting bindings.
   let bindings = bindgen::Builder::default()
+    .clang_args(&["-x", "c++"])
     // The input header we would like to generate
     // bindings for.
     .header("./src/interface.cpp")

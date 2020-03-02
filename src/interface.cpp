@@ -1,3 +1,5 @@
+#include <string>
+
 #include "../clip/clip.h"
 
 using namespace std;

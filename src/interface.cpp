@@ -1,14 +1,16 @@
 #include "../clip/clip.h"
 
+using namespace std;
+
 const char* clip_get_text() {
-  std::string text;
+  string text;
   if (!clip::get_text(text))
     return nullptr;
 
-  std::size_t length = text.length();
+  size_t length = text.length() + 1;
 
-  char* c_str = new char[length + 1];
-  strcpy_s(c_str, sizeof c_str, text.c_str());
+  char* c_str = new char[length];
+  strcpy_s(c_str, length, text.c_str());
 
   return c_str;
 }

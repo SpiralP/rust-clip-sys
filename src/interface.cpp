@@ -1,3 +1,4 @@
+#include <cstring>
 #include <string>
 
 #include "../clip/clip.h"
@@ -9,10 +10,10 @@ const char* clip_get_text() {
   if (!clip::get_text(text))
     return nullptr;
 
-  size_t length = text.length() + 1;
+  size_t length = text.length();
 
-  char* c_str = new char[length];
-  strcpy_s(c_str, length, text.c_str());
+  char* c_str = new char[length + 1];
+  strcpy(c_str, text.c_str());
 
   return c_str;
 }

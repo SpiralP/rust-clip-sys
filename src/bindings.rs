@@ -42,8 +42,8 @@ impl Drop for FFICharPtr {
 }
 
 impl clip_image {
-  pub fn data(&self) -> *const c_char {
-    self.m_data
+  pub fn data(&self) -> *const u8 {
+    self.m_data as *const u8
   }
 
   pub fn spec(&self) -> &clip_image_spec {

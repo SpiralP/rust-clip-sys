@@ -4,6 +4,9 @@ version = "0.1.0"
 authors = ["SpiralP <spiral.palmer@gmail.com>"]
 edition = "2018"
 
+[dependencies]
+failure = "0.1.7"
+
 [build-dependencies]
 bindgen = "0.53.1"
 cc = "1.0.50"

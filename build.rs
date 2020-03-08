@@ -40,7 +40,7 @@ fn main() {
   }
 
   config.include("clip");
-  config.file("src/interface.cpp");
+  config.file("./src/interface.cpp");
   config.compile("interface");
 
   #[cfg(target_os = "linux")]
@@ -63,7 +63,6 @@ fn main() {
   // to bindgen, and lets you build up options for
   // the resulting bindings.
   let bindings = bindgen::Builder::default()
-    .clang_args(&["-x", "c++"])
     // The input header we would like to generate
     // bindings for.
     .header("./src/interface.cpp")
@@ -74,10 +73,16 @@ fn main() {
     .whitelist_function("clip::text_format")
     .whitelist_function("clip::image_format")
     .whitelist_function("clip::has")
-    // .whitelist_function("clip::get_image")
-    // .whitelist_type("clip::image.*")
-    // .whitelist_function("clip::image.*")
+    .whitelist_function("clip::clear")
+    .whitelist_function("clip::set_image")
+    .whitelist_function("clip::get_image")
+    .whitelist_function("clip::get_image_spec")
+    .whitelist_function("clip::image::data")
     .whitelist_function("clip_.*")
+    .whitelist_function("FFI.*")
+    .whitelist_type("FFI.*")
+
+    .no_copy("FFI.*")
     // Finish the builder and generate the bindings.
     .generate()
     // Unwrap the Result and panic on failure.

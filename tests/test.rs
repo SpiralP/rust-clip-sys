@@ -25,33 +25,19 @@ fn test_text() {
   let in_string = "bap".to_string();
 
   // copy
-  {
+  unsafe {
     use std::ffi::CString;
+    let c_string = CString::new(in_string.clone()).unwrap();
 
-    unsafe {
-      let c_string = CString::new(in_string.clone()).unwrap();
-      let raw = c_string.into_raw();
-
-      assert!(clip_set_text(raw));
-
-      CString::from_raw(raw);
-    }
+    assert!(clip_set_text(c_string.as_ptr()));
   }
 
   // paste
-  let out_string = {
-    use std::ffi::CStr;
+  let out_string = unsafe {
+    let c_str = clip_get_text();
+    assert!(!c_str.is_null());
 
-    unsafe {
-      let c_str = clip_get_text();
-      assert!(!c_str.is_null());
-
-      let out_string = CStr::from_ptr(c_str).to_str().unwrap().to_string();
-
-      clip_delete_text(c_str);
-
-      out_string
-    }
+    c_str.to_string().unwrap()
   };
 
   assert_eq!(out_string, in_string);
@@ -65,12 +51,11 @@ fn test_get_image() {
       return;
     }
 
-    let img = clip_get_image();
-    assert!(!img.is_null());
+    let mut img = clip_image::new();
+    let ok = clip_get_image(&mut img);
+    assert!(ok);
 
-    println!("{:#?}", clip_get_image_spec(img));
-    println!("{:#?}", clip_get_image_data(img));
-
-    clip_delete_image(img);
+    println!("{:#?}", img.spec());
+    println!("{:#?}", img.data());
   }
 }

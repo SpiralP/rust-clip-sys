@@ -1,6 +1,8 @@
 use std::{env, path::PathBuf};
 
 fn main() {
+  println!("cargo:rerun-if-changed=./clip/clip.cpp");
+  println!("cargo:rerun-if-changed=./clip/clip_win.cpp");
   println!("cargo:rerun-if-changed=./src/interface.cpp");
 
   let dst = cmake::Config::new("clip").build_target("clip").build();
@@ -77,7 +79,7 @@ fn main() {
     .whitelist_function("clip::set_image")
     .whitelist_function("clip::get_image")
     .whitelist_function("clip::get_image_spec")
-    .whitelist_function("clip::image::data")
+    .whitelist_function("clip::get_paths")
     .whitelist_function("clip_.*")
     .whitelist_function("FFI.*")
     .whitelist_type("FFI.*")

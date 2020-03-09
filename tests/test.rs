@@ -59,3 +59,36 @@ fn test_get_image() {
     println!("{:#?}", img.data());
   }
 }
+
+#[test]
+fn test_paths() {
+  unsafe {
+    const PATHS_CAPACITY: usize = 10;
+
+    let mut paths: [clip_path; PATHS_CAPACITY] = std::mem::zeroed();
+
+    let paths_length = clip_get_paths(paths.as_mut_ptr(), &(PATHS_CAPACITY as u64));
+    assert!(paths_length > 0);
+
+    println!("{}", paths_length);
+
+    let paths: Vec<String> = paths[..paths_length as usize]
+      .iter()
+      .map(|path| {
+        if path.wide {
+          let buf = &path.buf.wide[..path.length as usize];
+
+          String::from_utf16(buf).unwrap()
+        } else {
+          let buf = &path.buf.ansi[..path.length as usize];
+          let buf = &*(buf as *const [i8] as *const [u8]);
+          let buf = buf.to_vec();
+
+          String::from_utf8(buf).unwrap()
+        }
+      })
+      .collect();
+
+    println!("{:#?}", paths);
+  }
+}

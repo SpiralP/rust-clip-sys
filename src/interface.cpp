@@ -38,4 +38,3 @@ EXPORT FFICharPtr clip_get_text() {
 EXPORT bool clip_set_text(const char* text) {
   return clip::set_text(text);
 }
-

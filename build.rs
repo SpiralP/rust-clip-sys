@@ -3,6 +3,9 @@ use std::{env, path::PathBuf};
 fn main() {
   println!("cargo:rerun-if-changed=./clip/clip.cpp");
   println!("cargo:rerun-if-changed=./clip/clip_win.cpp");
+  println!("cargo:rerun-if-changed=./clip/clip_x11.cpp");
+  println!("cargo:rerun-if-changed=./clip/clip_osx.mm");
+
   println!("cargo:rerun-if-changed=./src/interface.cpp");
 
   let dst = cmake::Config::new("clip").build_target("clip").build();
@@ -65,6 +68,7 @@ fn main() {
   // to bindgen, and lets you build up options for
   // the resulting bindings.
   let bindings = bindgen::Builder::default()
+    .clang_args(&["-x", "c++"])
     // The input header we would like to generate
     // bindings for.
     .header("./src/interface.cpp")

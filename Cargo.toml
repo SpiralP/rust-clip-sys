@@ -11,3 +11,6 @@ failure = "0.1.7"
 bindgen = "0.53.1"
 cc = "1.0.50"
 cmake = "0.1.42"
+
+[dev-dependencies]
+widestring = "0.4.0"

@@ -63,7 +63,9 @@ fn test_get_image() {
 #[test]
 fn test_paths() {
   unsafe {
-    const PATHS_CAPACITY: usize = 10;
+    use widestring::WideStr;
+
+    const PATHS_CAPACITY: usize = 100;
 
     let mut paths: [clip_path; PATHS_CAPACITY] = std::mem::zeroed();
 
@@ -78,7 +80,7 @@ fn test_paths() {
         if path.wide {
           let buf = &path.buf.wide[..path.length as usize];
 
-          String::from_utf16(buf).unwrap()
+          WideStr::from_slice(buf).to_string().unwrap()
         } else {
           let buf = &path.buf.ansi[..path.length as usize];
           let buf = &*(buf as *const [i8] as *const [u8]);

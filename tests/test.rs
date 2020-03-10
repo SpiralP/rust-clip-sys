@@ -63,6 +63,11 @@ fn test_get_image() {
 #[test]
 fn test_paths() {
   unsafe {
+    if !clip_has(clip_paths_format()) {
+      eprintln!("skipping paths test, no paths in clipboard");
+      return;
+    }
+
     use widestring::WideStr;
 
     const PATHS_CAPACITY: usize = 100;

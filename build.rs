@@ -78,6 +78,7 @@ fn main() {
     .whitelist_function("clip::empty_format")
     .whitelist_function("clip::text_format")
     .whitelist_function("clip::image_format")
+    .whitelist_function("clip::paths_format")
     .whitelist_function("clip::has")
     .whitelist_function("clip::clear")
     .whitelist_function("clip::set_image")

@@ -1,12 +1,12 @@
 use std::{env, path::PathBuf};
 
 fn main() {
-  println!("cargo:rerun-if-changed=./clip/clip.cpp");
-  println!("cargo:rerun-if-changed=./clip/clip_win.cpp");
-  println!("cargo:rerun-if-changed=./clip/clip_x11.cpp");
-  println!("cargo:rerun-if-changed=./clip/clip_osx.mm");
+  println!("cargo:rerun-if-changed=clip/clip.cpp");
+  println!("cargo:rerun-if-changed=clip/clip_win.cpp");
+  println!("cargo:rerun-if-changed=clip/clip_x11.cpp");
+  println!("cargo:rerun-if-changed=clip/clip_osx.mm");
 
-  println!("cargo:rerun-if-changed=./src/interface.cpp");
+  println!("cargo:rerun-if-changed=src/interface.cpp");
 
   let dst = cmake::Config::new("clip").build_target("clip").build();
 
@@ -45,7 +45,7 @@ fn main() {
   }
 
   config.include("clip");
-  config.file("./src/interface.cpp");
+  config.file("src/interface.cpp");
   config.compile("interface");
 
   #[cfg(target_os = "linux")]
@@ -71,7 +71,7 @@ fn main() {
     .clang_args(&["-x", "c++"])
     // The input header we would like to generate
     // bindings for.
-    .header("./src/interface.cpp")
+    .header("src/interface.cpp")
     // Tell cargo to invalidate the built crate whenever any of the
     // included header files changed.
     .parse_callbacks(Box::new(bindgen::CargoCallbacks))
@@ -87,7 +87,6 @@ fn main() {
     .whitelist_function("clip_.*")
     .whitelist_function("FFI.*")
     .whitelist_type("FFI.*")
-
     .no_copy("FFI.*")
     // Finish the builder and generate the bindings.
     .generate()
